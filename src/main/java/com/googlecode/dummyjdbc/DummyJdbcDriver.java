@@ -7,22 +7,25 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.googlecode.dummyjdbc.connection.impl.DummyConnection;
+import com.googlecode.dummyjdbc.utils.BufferedFileResource;
+import com.googlecode.dummyjdbc.utils.FileResource;
+import com.googlecode.dummyjdbc.utils.Resource;
 
 /**
- * The {@link DummyJdbcDriver}. The {@link #connect(String, Properties)} method returns the {@link DummyConnection}.
- *
+ * The {@link DummyJdbcDriver}. The {@link #connect(String, Properties)} method
+ * returns the {@link DummyConnection}.
+ * 
  * @author Kai Winter
  */
 public final class DummyJdbcDriver implements Driver {
 
-	private static Map<String, File> tableResources = Collections.synchronizedMap(new HashMap<String, File>());
+	private static Map<String, Resource> tableResources = new ConcurrentHashMap<String, Resource>();
 
 	static {
 		try {
@@ -34,16 +37,27 @@ public final class DummyJdbcDriver implements Driver {
 	}
 
 	/**
-	 * Registers a CSV file for a database table. When a Query is executed like <code>SELECT * FROM ADDRESSES</code> the
-	 * given <code>csvFile</code> for the given <code>tablename</code> <code>addresses</code> will be used.
-	 *
+	 * Registers a CSV file for a database table.
+	 * 
+	 * When a Query is executed like <code>SELECT * FROM ADDRESSES</code> the
+	 * given <code>file</code> for the given <code>tablename</code>
+	 * <code>addresses</code> will be used.
+	 * 
 	 * @param tablename
-	 *            The name of the database table like in the SQL statement (e.g. addresses).
-	 * @param csvFile
-	 *            A {@link File} object of a CSV file which should be parsed in order to return table data.
+	 *            The name of the database table like in the SQL statement (e.g.
+	 *            addresses).
+	 * @param file
+	 *            A {@link File} object of a CSV file which should be parsed in
+	 *            order to return table data.
 	 */
-	public static void addTableResource(String tablename, File csvFile) {
-		tableResources.put(tablename, csvFile);
+	public static void addTableResource(String tablename, File file) {
+		addTableResource(tablename, file, false);
+	}
+
+	public static void addTableResource(String tablename, File file,
+			boolean buffered) {
+		tableResources.put(tablename, buffered ? new BufferedFileResource(file)
+				: new FileResource(file));
 	}
 
 	@Override

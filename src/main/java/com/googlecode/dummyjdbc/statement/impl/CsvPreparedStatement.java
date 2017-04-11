@@ -1,11 +1,11 @@
 package com.googlecode.dummyjdbc.statement.impl;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
 import com.googlecode.dummyjdbc.statement.PreparedStatementAdapter;
+import com.googlecode.dummyjdbc.utils.Resource;
 
 /**
  * Wraps the {@link CsvStatement} as a prepared statement.
@@ -24,7 +24,7 @@ public class CsvPreparedStatement extends PreparedStatementAdapter {
 	 * @param sql
 	 *            the SQL statement.
 	 */
-	public CsvPreparedStatement(Map<String, File> tableResources, String sql) {
+	public CsvPreparedStatement(Map<String, Resource> tableResources, String sql) {
 		this.statement = new CsvStatement(tableResources);
 		this.sql = sql;
 	}

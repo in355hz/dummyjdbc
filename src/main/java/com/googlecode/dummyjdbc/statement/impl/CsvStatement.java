@@ -1,8 +1,6 @@
 package com.googlecode.dummyjdbc.statement.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +25,8 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.googlecode.dummyjdbc.resultset.DummyResultSet;
 import com.googlecode.dummyjdbc.resultset.impl.CSVResultSet;
 import com.googlecode.dummyjdbc.statement.StatementAdapter;
+import com.googlecode.dummyjdbc.utils.FileResource;
+import com.googlecode.dummyjdbc.utils.Resource;
 
 /**
  * This class does the actual work of the Generic... classes. It tries to open a CSV file for the table name in the
@@ -45,7 +45,7 @@ public final class CsvStatement extends StatementAdapter {
 	private static final Pattern STORED_PROCEDURE_PATTERN = Pattern.compile(".*(EXEC|EXECUTE) (\\S*)\\s?.*",
 			Pattern.CASE_INSENSITIVE);
 
-	private final Map<String, File> tableResources;
+	private final Map<String, Resource> tableResources;
 
 	/**
 	 * Constructs a new {@link CsvStatement}.
@@ -53,7 +53,7 @@ public final class CsvStatement extends StatementAdapter {
 	 * @param tableResources
 	 *            {@link Map} of table name to CSV file.
 	 */
-	public CsvStatement(Map<String, File> tableResources) {
+	public CsvStatement(Map<String, Resource> tableResources) {
 		this.tableResources = tableResources;
 	}
 
@@ -79,7 +79,7 @@ public final class CsvStatement extends StatementAdapter {
 
 	private ResultSet createResultSet(String tableName) {
 		// Does a text file for the dummy table exist?
-		File resource = tableResources.get(tableName.toLowerCase());
+		Resource resource = tableResources.get(tableName.toLowerCase());
 		if (resource == null) {
 			// Try to load a file from the ./tables/ directory
 			CodeSource src = CsvStatement.class.getProtectionDomain().getCodeSource();
@@ -92,18 +92,18 @@ public final class CsvStatement extends StatementAdapter {
 					LOGGER.info("No table definition found for '{}', using DummyResultSet.", tableName);
 					return new DummyResultSet();
 				} else {
-					resource = new File(url.toURI());
+					resource = new FileResource(new File(url.toURI()));
 				}
 			} catch (URISyntaxException e) {
 				LOGGER.error("Error creating URI for table file: {}", e.getMessage(), e);
 			}
 		}
 
-		FileInputStream dummyTableDataStream = null;
+		InputStream dummyTableDataStream = null;
 		try {
-			dummyTableDataStream = new FileInputStream(resource);
+			dummyTableDataStream = resource.getInputStream();
 			return createGenericResultSet(tableName, dummyTableDataStream);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			LOGGER.info("No table definition found for '{}', using DummyResultSet.", tableName);
 		} finally {
 			if (dummyTableDataStream != null) {

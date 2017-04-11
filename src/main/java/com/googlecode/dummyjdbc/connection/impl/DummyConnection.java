@@ -1,6 +1,5 @@
 package com.googlecode.dummyjdbc.connection.impl;
 
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,6 +8,7 @@ import java.util.Map;
 import com.googlecode.dummyjdbc.connection.ConnectionAdapter;
 import com.googlecode.dummyjdbc.statement.impl.CsvPreparedStatement;
 import com.googlecode.dummyjdbc.statement.impl.CsvStatement;
+import com.googlecode.dummyjdbc.utils.Resource;
 
 /**
  * Connection which implements the methods {@link #createStatement()} and {@link #prepareStatement(String)}. The
@@ -20,13 +20,13 @@ import com.googlecode.dummyjdbc.statement.impl.CsvStatement;
  */
 public class DummyConnection extends ConnectionAdapter {
 
-	private Map<String, File> tableResources;
+	private Map<String, Resource> tableResources;
 
 	/**
 	 * Constructs a new {@link DummyConnection}.
 	 * @param tableResources {@link Map} of table name to CSV file.
 	 */
-	public DummyConnection(Map<String, File> tableResources) {
+	public DummyConnection(Map<String, Resource> tableResources) {
 		this.tableResources = tableResources;
 	}
 
