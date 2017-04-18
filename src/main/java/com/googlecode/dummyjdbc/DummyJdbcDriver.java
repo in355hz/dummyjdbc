@@ -54,6 +54,22 @@ public final class DummyJdbcDriver implements Driver {
 		addTableResource(tablename, file, false);
 	}
 
+	/**
+	 * Registers a CSV file for a database table.
+	 * 
+	 * When a Query is executed like <code>SELECT * FROM ADDRESSES</code> the
+	 * given <code>file</code> for the given <code>tablename</code>
+	 * <code>addresses</code> will be used.
+	 * 
+	 * @param tablename
+	 *            The name of the database table like in the SQL statement (e.g.
+	 *            addresses).
+	 * @param file
+	 *            A {@link File} object of a CSV file which should be parsed in
+	 *            order to return table data.
+	 * @param buffered
+	 *            set <code>true</code> to buffered file content in memory.
+	 */
 	public static void addTableResource(String tablename, File file,
 			boolean buffered) {
 		tableResources.put(tablename, buffered ? new BufferedFileResource(file)
@@ -86,11 +102,11 @@ public final class DummyJdbcDriver implements Driver {
 	}
 
 	@Override
-	public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties props) throws SQLException {
+	public DriverPropertyInfo[] getPropertyInfo(final String url,
+			final Properties props) throws SQLException {
 		return new DriverPropertyInfo[0];
 	}
 
-	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		return null;
 	}
