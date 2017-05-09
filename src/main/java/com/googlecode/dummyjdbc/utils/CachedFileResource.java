@@ -7,14 +7,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BufferedFileResource extends FileResource {
+public class CachedFileResource extends FileResource {
 	private volatile byte[] buffer;
 
-	public BufferedFileResource(File file) {
+	public CachedFileResource(File file) {
 		super(file);
 	}
 
-	public BufferedFileResource(String filename) {
+	public CachedFileResource(String filename) {
 		super(filename);
 	}
 

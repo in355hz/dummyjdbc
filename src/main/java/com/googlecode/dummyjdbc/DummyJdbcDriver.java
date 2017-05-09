@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.googlecode.dummyjdbc.connection.impl.DummyConnection;
-import com.googlecode.dummyjdbc.utils.BufferedFileResource;
+import com.googlecode.dummyjdbc.utils.CachedFileResource;
 import com.googlecode.dummyjdbc.utils.FileResource;
 import com.googlecode.dummyjdbc.utils.Resource;
 
@@ -71,8 +71,8 @@ public final class DummyJdbcDriver implements Driver {
 	 *            set <code>true</code> to buffered file content in memory.
 	 */
 	public static void addTableResource(String tablename, File file,
-			boolean buffered) {
-		tableResources.put(tablename, buffered ? new BufferedFileResource(file)
+			boolean cached) {
+		tableResources.put(tablename, cached ? new CachedFileResource(file)
 				: new FileResource(file));
 	}
 
