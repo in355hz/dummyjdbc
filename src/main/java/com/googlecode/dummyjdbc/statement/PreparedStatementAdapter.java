@@ -23,6 +23,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import com.googlecode.dummyjdbc.resultset.DummyResultSet;
+
 /**
  * Empty implementation of {@link PreparedStatement}. Sub classes should implement the functionality.
  *
@@ -45,7 +47,7 @@ public class PreparedStatementAdapter implements PreparedStatement {
 
 	@Override
 	public ResultSet executeQuery() throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override
@@ -302,7 +304,7 @@ public class PreparedStatementAdapter implements PreparedStatement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override
@@ -342,7 +344,7 @@ public class PreparedStatementAdapter implements PreparedStatement {
 
 	@Override
 	public ResultSet getGeneratedKeys() throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override
@@ -372,7 +374,7 @@ public class PreparedStatementAdapter implements PreparedStatement {
 
 	@Override
 	public ResultSet getResultSet() throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override

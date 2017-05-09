@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
+import com.googlecode.dummyjdbc.resultset.DummyResultSet;
+
 public class DummyDatabaseMetaData implements DatabaseMetaData {
     @Override public boolean allProceduresAreCallable() throws SQLException {
         return false;
@@ -480,71 +482,71 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override public ResultSet getProcedures(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getProcedureColumns(String s, String s2, String s3, String s4) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getTables(String s, String s2, String s3, String[] strings) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getSchemas() throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getCatalogs() throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getTableTypes() throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getColumns(String s, String s2, String s3, String s4) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getColumnPrivileges(String s, String s2, String s3, String s4) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getTablePrivileges(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getBestRowIdentifier(String s, String s2, String s3, int i, boolean b) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getVersionColumns(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getPrimaryKeys(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getImportedKeys(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getExportedKeys(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getCrossReference(String s, String s2, String s3, String s4, String s5, String s6) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getTypeInfo() throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getIndexInfo(String s, String s2, String s3, boolean b, boolean b2) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public boolean supportsResultSetType(int i) throws SQLException {
@@ -596,7 +598,7 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override public ResultSet getUDTs(String s, String s2, String s3, int[] ints) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public Connection getConnection() throws SQLException {
@@ -620,15 +622,15 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override public ResultSet getSuperTypes(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getSuperTables(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getAttributes(String s, String s2, String s3, String s4) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public boolean supportsResultSetHoldability(int i) throws SQLException {
@@ -672,7 +674,7 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override public ResultSet getSchemas(String s, String s2) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
@@ -684,15 +686,15 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override public ResultSet getClientInfoProperties() throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getFunctions(String s, String s2, String s3) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public ResultSet getFunctionColumns(String s, String s2, String s3, String s4) throws SQLException {
-        return null;
+        return new DummyResultSet();
     }
 
     @Override public <T> T unwrap(Class<T> tClass) throws SQLException {
@@ -705,7 +707,7 @@ public class DummyDatabaseMetaData implements DatabaseMetaData {
 
 	public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
 			throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	public boolean generatedKeyAlwaysReturned() throws SQLException {

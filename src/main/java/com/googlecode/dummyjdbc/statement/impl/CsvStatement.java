@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.googlecode.dummyjdbc.resultset.DummyResultSet;
-import com.googlecode.dummyjdbc.resultset.impl.CSVResultSet;
+import com.googlecode.dummyjdbc.resultset.impl.CsvResultSet;
 import com.googlecode.dummyjdbc.statement.StatementAdapter;
 import com.googlecode.dummyjdbc.utils.FileResource;
 import com.googlecode.dummyjdbc.utils.Resource;
@@ -39,10 +39,10 @@ public final class CsvStatement extends StatementAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CsvStatement.class);
 
 	/** Pattern to get table name from an SQL statement. */
-	private static final Pattern TABLENAME_PATTERN = Pattern.compile(".*from (\\S*)\\s?.*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern TABLENAME_PATTERN = Pattern.compile(".*SELECT\\s.*\\sFROM\\s+(\\S*)\\s?.*", Pattern.CASE_INSENSITIVE);
 
 	/** Pattern to get the name of a stored procedure from an SQL statement. */
-	private static final Pattern STORED_PROCEDURE_PATTERN = Pattern.compile(".*(EXEC|EXECUTE) (\\S*)\\s?.*",
+	private static final Pattern STORED_PROCEDURE_PATTERN = Pattern.compile(".*(EXEC|EXECUTE)\\s+(\\S*)\\s?.*",
 			Pattern.CASE_INSENSITIVE);
 
 	private final Map<String, Resource> tableResources;
@@ -63,7 +63,7 @@ public final class CsvStatement extends StatementAdapter {
 		// Try to interpret SQL as a SELECT on a table
 		Matcher tableMatcher = TABLENAME_PATTERN.matcher(sql);
 		if (tableMatcher.matches()) {
-			String tableName = tableMatcher.group(1);
+			String tableName = unescapeIdentity(tableMatcher.group(1));
 			return createResultSet(tableName);
 		}
 
@@ -75,6 +75,15 @@ public final class CsvStatement extends StatementAdapter {
 		}
 
 		return new DummyResultSet();
+	}
+
+	private static String unescapeIdentity(String identity) {
+		int length = identity.length();
+
+		if (length > 2 && identity.charAt(0) == '`' && identity.charAt(length - 1) == '`') {
+			return identity.substring(1, length - 1);
+		}
+		return identity;
 	}
 
 	private ResultSet createResultSet(String tableName) {
@@ -153,7 +162,7 @@ public final class CsvStatement extends StatementAdapter {
 
 				}
 			}
-			return new CSVResultSet(tableName, entries);
+			return new CsvResultSet(tableName, entries);
 
 		} catch (IOException e) {
 			LOGGER.error("Error while reading data from CSV", e);

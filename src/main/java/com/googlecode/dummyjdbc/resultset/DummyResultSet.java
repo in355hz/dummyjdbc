@@ -229,7 +229,7 @@ public class DummyResultSet implements ResultSet {
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		return null;
+		return new DummyResultSetMetaData();
 	}
 
 	@Override

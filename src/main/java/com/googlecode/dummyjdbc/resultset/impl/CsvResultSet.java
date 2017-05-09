@@ -2,6 +2,7 @@ package com.googlecode.dummyjdbc.resultset.impl;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -12,13 +13,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import com.googlecode.dummyjdbc.resultset.DummyResultSet;
+import com.googlecode.dummyjdbc.resultset.DummyResultSetMetaData;
 
 /**
- * The {@link CSVResultSet} which iterates over the CSV file data.
+ * The {@link CsvResultSet} which iterates over the CSV file data.
  *
  * @author Kai Winter
  */
-public class CSVResultSet extends DummyResultSet {
+public class CsvResultSet extends DummyResultSet {
 
 	/**
 	 * The date format for parsing a date from a CSV file.
@@ -44,15 +46,15 @@ public class CSVResultSet extends DummyResultSet {
 	private final String tableName;
 
 	/**
-	 * Constructs a new {@link CSVResultSet}.
+	 * Constructs a new {@link CsvResultSet}.
 	 * 
 	 * @param tableName
-	 *            the name of the table this {@link CSVResultSet} stands for.
+	 *            the name of the table this {@link CsvResultSet} stands for.
 	 * 
 	 * @param entries
 	 *            Collection of entries from the CSV file. Each {@link LinkedHashMap} maps column name to column value.
 	 */
-	public CSVResultSet(String tableName, Collection<LinkedHashMap<String, String>> entries) {
+	public CsvResultSet(String tableName, Collection<LinkedHashMap<String, String>> entries) {
 		this.tableName = tableName;
 		this.dummyData = entries;
 		this.resultIterator = dummyData.iterator();
@@ -69,23 +71,25 @@ public class CSVResultSet extends DummyResultSet {
 	}
 
 	@Override
+	public Object getObject(int columnIndex) throws SQLException {
+		return getValueForColumnIndex(columnIndex, String.class);
+	}
+
+	@Override
 	public String getString(int columnIndex) throws SQLException {
 		String value = getValueForColumnIndex(columnIndex, String.class);
-
 		return value;
 	}
 
 	@Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
 		String value = getValueForColumnIndex(columnIndex, Boolean.class);
-
 		return Boolean.valueOf(value);
 	}
 
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
 		String value = getValueForColumnIndex(columnIndex, Integer.class);
-
 		return Integer.valueOf(value);
 	}
 
@@ -110,6 +114,11 @@ public class CSVResultSet extends DummyResultSet {
 	}
 
 	@Override
+	public Object getObject(String columnLabel) throws SQLException {
+		return getValueForColumnLabel(columnLabel, String.class);
+	}
+
+	@Override
 	public String getString(String columnLabel) throws SQLException {
 		String string = getValueForColumnLabel(columnLabel, String.class);
 		return string;
@@ -118,28 +127,24 @@ public class CSVResultSet extends DummyResultSet {
 	@Override
 	public boolean getBoolean(String columnLabel) throws SQLException {
 		String string = getValueForColumnLabel(columnLabel, Boolean.class);
-
 		return Boolean.valueOf(string);
 	}
 
 	@Override
 	public int getInt(String columnLabel) throws SQLException {
 		String string = getValueForColumnLabel(columnLabel, Integer.class);
-
 		return Integer.valueOf(string);
 	}
 
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
 		String string = getValueForColumnIndex(columnIndex, Date.class);
-
 		return parseDate(string);
 	}
 
 	@Override
 	public Date getDate(String columnLabel) throws SQLException {
 		String string = getValueForColumnLabel(columnLabel, Date.class);
-
 		return parseDate(string);
 	}
 
@@ -183,4 +188,12 @@ public class CSVResultSet extends DummyResultSet {
 		return currentEntry.get(columnLabel.toUpperCase());
 	}
 
+	@Override
+	public ResultSetMetaData getMetaData() throws SQLException {
+		if (!dummyData.isEmpty()) {
+			String[] columns = dummyData.iterator().next().keySet().toArray(new String[0]);
+			return new CsvResultSetMetaData(tableName, columns);
+		}
+		return new DummyResultSetMetaData();
+	}
 }

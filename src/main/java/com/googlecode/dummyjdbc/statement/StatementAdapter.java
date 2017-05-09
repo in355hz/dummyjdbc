@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
+import com.googlecode.dummyjdbc.resultset.DummyResultSet;
+
 /**
  * Empty implementation of {@link Statement}. Sub classes should implement the functionality.
  *
@@ -87,7 +89,7 @@ public class StatementAdapter implements Statement {
 
 	@Override
 	public ResultSet getResultSet() throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override
@@ -153,7 +155,7 @@ public class StatementAdapter implements Statement {
 
 	@Override
 	public ResultSet getGeneratedKeys() throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	@Override
@@ -207,7 +209,7 @@ public class StatementAdapter implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		return null;
+		return new DummyResultSet();
 	}
 
 	public void closeOnCompletion() throws SQLException {
