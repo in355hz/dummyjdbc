@@ -140,19 +140,22 @@ public final class CsvStatement extends StatementAdapter {
 			// Read header
 			String[] header = dummyTableReader.readNext();
 			if (header != null) {
+				for (int i = 0; i < header.length; i++) {
+					header[i] = header[i].trim().toUpperCase();
+				}
 
 				String[] data;
 				// Read data
 				while ((data = dummyTableReader.readNext()) != null) {
 					if (header.length == data.length) {
-						LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+						LinkedHashMap<String, String> map = new LinkedHashMap<String, String>((int) (header.length / 0.75f) + 1);
 						for (int i = 0; i < header.length; i++) {
-							if (map.containsKey(header[i].trim().toUpperCase())) {
+							if (map.containsKey(header[i])) {
 								String message = MessageFormat.format("Duplicate column in file ''{0}.txt: {1}",
 										tableName, header[i]);
 								throw new IllegalArgumentException(message);
 							}
-							map.put(header[i].trim().toUpperCase(), data[i].trim());
+							map.put(header[i], data[i].trim());
 
 						}
 						entries.add(map);

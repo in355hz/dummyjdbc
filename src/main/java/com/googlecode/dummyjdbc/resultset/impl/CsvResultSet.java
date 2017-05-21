@@ -45,6 +45,9 @@ public class CsvResultSet extends DummyResultSet {
 
 	private final String tableName;
 
+	/** The current columns. */
+	private String[] columns;
+
 	/**
 	 * Constructs a new {@link CsvResultSet}.
 	 * 
@@ -64,6 +67,9 @@ public class CsvResultSet extends DummyResultSet {
 	public boolean next() throws SQLException {
 		if (resultIterator.hasNext()) {
 			currentEntry = resultIterator.next();
+			if (columns == null) {
+				columns = currentEntry.keySet().toArray(new String[0]);
+			}
 			return true;
 		}
 
@@ -164,8 +170,6 @@ public class CsvResultSet extends DummyResultSet {
 	}
 
 	private String getValueForColumnIndex(int columnIndex, Class<?> clazz) throws SQLException {
-		String[] columns = currentEntry.keySet().toArray(new String[0]);
-
 		if (columnIndex > columns.length) {
 			String message = MessageFormat.format(
 					"Column index {0} does not exist in table file ''{1}'' (type ''{2}'')", columnIndex, tableName,
@@ -179,19 +183,23 @@ public class CsvResultSet extends DummyResultSet {
 	}
 
 	private String getValueForColumnLabel(String columnLabel, Class<?> clazz) throws SQLException {
-		if (!currentEntry.containsKey(columnLabel.toUpperCase())) {
+		columnLabel = columnLabel.toUpperCase();
+
+		if (!currentEntry.containsKey(columnLabel)) {
 			String message = MessageFormat.format("Column ''{0}'' does not exist in table file ''{1}'' (type ''{2}'')",
 					columnLabel, tableName, clazz);
 			throw new SQLException(message);
 		}
 
-		return currentEntry.get(columnLabel.toUpperCase());
+		return currentEntry.get(columnLabel);
 	}
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
 		if (!dummyData.isEmpty()) {
-			String[] columns = dummyData.iterator().next().keySet().toArray(new String[0]);
+			if (columns == null) {
+				columns = dummyData.iterator().next().keySet().toArray(new String[0]);
+			}
 			return new CsvResultSetMetaData(tableName, columns);
 		}
 		return new DummyResultSetMetaData();
