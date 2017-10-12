@@ -394,7 +394,7 @@ public class PreparedStatementAdapter implements PreparedStatement {
 
 	@Override
 	public int getUpdateCount() throws SQLException {
-		return 0;
+		return -1;
 	}
 
 	@Override

@@ -94,7 +94,7 @@ public class StatementAdapter implements Statement {
 
 	@Override
 	public int getUpdateCount() throws SQLException {
-		return 0;
+		return -1;
 	}
 
 	@Override
